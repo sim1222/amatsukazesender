@@ -76,6 +76,7 @@ namespace amatsukazesender
             
             if (suffix[0].EndsWith(".ts") == false)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("これはTSファイルではありません");
                 return;
             }
@@ -83,7 +84,8 @@ namespace amatsukazesender
             string amtopt = (" -r \"G:\friio\\Amatsukaze_0.9.1.4\\Amatsukaze\" -ip \"192.168.1.3\" -p 32768 -o \"F:\\TV\\encoded\" -s \"x265 - 10Bitインタレ解除アニメ用（CUDA必須）\" --priority 3 --no-move" + "-f \"" + suffix[0].Replace(befval, aftval) + "\"");
 
             string amtcommand = (amtpath + amtopt);
-            
+
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("元ファイル: {0}", suffix[0]);
             Console.WriteLine();
             Console.WriteLine("コピー先環境パス: {0}", suffix[0].Replace(befval, aftval));
@@ -92,13 +94,16 @@ namespace amatsukazesender
             Console.WriteLine();
             Console.WriteLine("Amatsukaze実行コマンド: {0}", amtcommand);
             Console.WriteLine();
+            Console.ResetColor();
 
             // メイン処理
 
             int retrynum = 10000;
             int retrycount = 0;
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("ファイルコピーを開始します");
+            Console.ResetColor();
             while (true)
             {
                 try
@@ -110,20 +115,29 @@ namespace amatsukazesender
                     Console.WriteLine(error.Message);
                     if (retrycount++ < retrynum)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("エラーが発生しました: {0}", error);
+                        Console.ForegroundColor = ConsoleColor.Cyan;
                         Console.WriteLine("5秒後に再試行します… リトライ回数: {0}", retrycount);
-                        Thread.Sleep(5);
+                        Console.ResetColor();
+                        Thread.Sleep(5000);
                     } else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("リトライ回数が(0)に達しました。処理を中止します。", retrycount);
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("エラー内容: {0}", error);
                         throw error;
                     }
                 }
             }
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("コピーが完了しました。");
+            Console.ResetColor();
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Amatsukazeにタスクを追加します");
+            Console.ResetColor();
 
             var amtproc = new Process();
 
@@ -134,8 +148,10 @@ namespace amatsukazesender
 
             amtproc.WaitForExit();
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("多分完了しました。");
             Console.WriteLine("元TSを削除します");
+            Console.ResetColor();
             File.Delete(suffix[0]);
 
             return;
