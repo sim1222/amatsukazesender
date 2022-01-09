@@ -53,9 +53,9 @@ namespace amatsukazesender
             Console.WriteLine(usagebuilder.ToString());
             // initおわり
 
-            string prebefval = "C:\\";
+            string prebefval = "C:\\TV\\";
             string preaftval = "F:\\";
-            string preamtpath = "C:\\Amatsukaze_0.9.1.4\\Amatsukaze\\exe_files\\AmatsukazeAddTask.exe";
+            string preamtpath = "C:\\friio\\Amatsukaze_0.9.1.4\\Amatsukaze\\exe_files\\AmatsukazeAddTask.exe";
 
 
             // String teststr = "C:\\TV\\afffafs\\saafsf!!!!!##nya.mp4";
@@ -81,14 +81,22 @@ namespace amatsukazesender
                 return;
             }
 
-            string amtopt = (" -r \"G:\friio\\Amatsukaze_0.9.1.4\\Amatsukaze\" -ip \"192.168.1.3\" -p 32768 -o \"F:\\TV\\encoded\" -s \"x265 - 10Bitインタレ解除アニメ用（CUDA必須）\" --priority 3 --no-move" + "-f \"" + suffix[0].Replace(befval, aftval) + "\"");
+
+
+            string sourcedir = suffix[0];
+            string destdir = suffix[0].Replace(befval, aftval);
+            string remotedir = suffix[0].Replace("C:\\TV", "F:\\TV");
+
+            string amtopt = (" -r \"G:\\friio\\Amatsukaze_0.9.1.4\\Amatsukaze\" -ip \"192.168.1.3\" -p 32768 -o \"F:\\TV\\encoded\" --priority 3 --no-move " + "-f \"" + remotedir + "\"");
 
             string amtcommand = (amtpath + amtopt);
 
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("元ファイル: {0}", suffix[0]);
+            Console.WriteLine("元ファイル: {0}", sourcedir);
             Console.WriteLine();
-            Console.WriteLine("コピー先環境パス: {0}", suffix[0].Replace(befval, aftval));
+            Console.WriteLine("コピー先パス: {0}", destdir);
+            Console.WriteLine();
+            Console.WriteLine("コピー先環境パス: {0}", remotedir);
             Console.WriteLine();
             Console.WriteLine("Amatsukazeパス: {0}", amtpath);
             Console.WriteLine();
@@ -105,8 +113,7 @@ namespace amatsukazesender
             Console.WriteLine("ファイルコピーを開始します");
             Console.ResetColor();
 
-            string sourcedir = suffix[0];
-            string destdir = suffix[0].Replace(befval, aftval);
+
             
             while (true)
             {
