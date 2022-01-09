@@ -104,11 +104,16 @@ namespace amatsukazesender
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("ファイルコピーを開始します");
             Console.ResetColor();
+
+            string sourcedir = suffix[0];
+            string destdir = suffix[0].Replace(befval, aftval);
+            
             while (true)
             {
                 try
                 {
-                    File.Copy(suffix[0], suffix[0].Replace(befval, aftval), false);
+                    File.Copy(sourcedir, destdir, false);
+                    break;
                 }
                 catch (IOException error)
                 {
