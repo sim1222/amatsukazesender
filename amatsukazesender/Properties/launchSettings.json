@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "amatsukazesender": {
+      "commandName": "Project"
+    },
+    "引数テスト": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\TV\\あんんぼｂ　ん ｂ#あ！!あふぉあｆ.ts\""
+    }
+  }
+}
