@@ -193,11 +193,11 @@ namespace amatsukazesender
                 else if (retrycount++ < retrynum)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("エラーが発生しました: {0}", amtproc.StandardOutput.read);
+                    Console.WriteLine("エラーが発生しました");
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("5秒後に再試行します… リトライ回数: {0}", retrycount);
                     Console.ResetColor();
-                    logger.Error("タスク追加エラー発生: {0}", error);
+                    logger.Error("タスク追加エラー発生");
                     logger.Warn("再試行待機 リトライ回数: {0}", retrycount);
                     Thread.Sleep(5000);
                 }
