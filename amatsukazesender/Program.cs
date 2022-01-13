@@ -91,7 +91,7 @@ namespace amatsukazesender
             string destdir = suffix[0].Replace(befval, aftval);
             string remotedir = suffix[0].Replace("C:\\TV", "F:\\TV");
 
-            string amtopt = (" -r \"G:\\friio\\Amatsukaze_0.9.1.4\\Amatsukaze\" -ip \"192.168.1.3\" -p 32768 -o \"F:\\TV\\encoded\" --priority 3 --no-move " + "-f \"" + remotedir + "\"");
+            string amtopt = (" -r \"G:\\friio\\Amatsukaze_0.9.1.4\\Amatsukaze\" -ip \"192.168.1.3\" -p 32768 -o \"F:\\TV\\encoded\" -s \"自動選択_デフォルト\" --priority 3 --no-move " + "-f \"" + remotedir + "\"");
 
             string amtcommand = (amtpath + amtopt);
 
@@ -178,30 +178,30 @@ namespace amatsukazesender
 
             retrycount = 0;
 
-            while (true)
-            {
+            //while (true)
+            //{
                 amtproc.Start();
 
                 var amtlog = amtproc.StandardOutput.ReadToEnd();
 
                 amtproc.WaitForExit();
 
-                if (amtlog.EndsWith("件追加しました") == true)
-                {
-                    break;
-                } 
-                else if (retrycount++ < retrynum)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("エラーが発生しました");
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine("5秒後に再試行します… リトライ回数: {0}", retrycount);
-                    Console.ResetColor();
-                    logger.Error("タスク追加エラー発生");
-                    logger.Warn("再試行待機 リトライ回数: {0}", retrycount);
-                    Thread.Sleep(5000);
-                }
-            }
+                //if (amtlog.EndsWith("件追加しました") == true)
+                //{
+                //    break;
+                //} 
+                //else if (retrycount++ < retrynum)
+                //{
+                //    Console.ForegroundColor = ConsoleColor.Red;
+                //    Console.WriteLine("エラーが発生しました");
+                //    Console.ForegroundColor = ConsoleColor.Cyan;
+                //    Console.WriteLine("5秒後に再試行します… リトライ回数: {0}", retrycount);
+                //    Console.ResetColor();
+                //    logger.Error("タスク追加エラー発生");
+                //    logger.Warn("再試行待機 リトライ回数: {0}", retrycount);
+                //    Thread.Sleep(5000);
+                //}
+            //}
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("多分完了しました。");
