@@ -5,12 +5,22 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using NLog;
+using NLog.Config;
+using NLog.Targets;
+using System.Security.Cryptography;
 
 namespace amatsukazesender
 {
     
     class Program
     {
+
+        public static Logger logger = LogManager.GetCurrentClassLogger();
+        
+
+
+
+
         static void Main(string[] args)
         {
             var parser = new CommandParser();
@@ -74,6 +84,11 @@ namespace amatsukazesender
             string aftval = (parsed.HasOption('a') ? opaftval : preaftval);
             string amtpath = (parsed.HasOption('p') ? opamtpath : preamtpath);
 
+
+            if (suffix.Count == 0)
+            {
+                return;
+            }
             
             if (suffix[0].EndsWith(".ts") == false)
             {
@@ -83,9 +98,7 @@ namespace amatsukazesender
             }
 
 
-            var logger = LogManager.GetCurrentClassLogger();
             logger.Info("Logger Init");
-
 
             string sourcedir = suffix[0];
             string destdir = suffix[0].Replace(befval, aftval);
@@ -113,102 +126,30 @@ namespace amatsukazesender
             Console.WriteLine();
             Console.ResetColor();
 
-            // メイン処理
-
-            int retrynum = 10000;
-            int retrycount = 0;
-
-            
 
 
-            
-            while (true)
-            {
-                try
-                {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("ファイルコピーを開始します");
-                    logger.Info("ファイルコピー開始");
-                    Console.ResetColor();
-                    File.Copy(sourcedir, destdir, false);
-                    break;
-                }
-                catch (IOException error)
-                {
-                    Console.WriteLine(error.Message);
-                    if (retrycount++ < retrynum)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("エラーが発生しました: {0}", error);
-                        Console.ForegroundColor = ConsoleColor.Cyan;
-                        Console.WriteLine("5秒後に再試行します… リトライ回数: {0}", retrycount);
-                        Console.ResetColor();
-                        logger.Error("コピーエラー発生: {0}", error);
-                        logger.Warn("再試行待機 リトライ回数: {0}", retrycount);
-                        Thread.Sleep(5000);
-                    } else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("リトライ回数が(0)に達しました。処理を中止します。", retrycount);
-                        logger.Warn("リトライ回数{0}突破、中止", retrycount);
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("エラー内容: {0}", error);
-                        logger.Error("エラー内容: {0}", error);
-                        throw error;
-                    }
-                }
-            }
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("コピーが完了しました。");
-            logger.Info("コピー完了");
-            Console.ResetColor();
+
+            //main
+
+            //FileCopy
+            CopyFileClass.CopyFile(sourcedir, destdir);
+            //HashComparison
+            HashComparisonClass.HashComparison(sourcedir, destdir);
+
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Amatsukazeにタスクを追加します");
             Console.ResetColor();
+            //SendJob
+            SendClass.SendJob(amtpath, amtopt);
 
-            var amtproc = new Process();
 
-            amtproc.StartInfo.FileName = amtpath;
-            amtproc.StartInfo.Arguments = amtopt;
-            amtproc.StartInfo.UseShellExecute = false;
-            amtproc.StartInfo.CreateNoWindow = true;
-            amtproc.StartInfo.RedirectStandardOutput = true;
-            logger.Info("タスク追加開始");
-
-            retrycount = 0;
-
-            //while (true)
-            //{
-                amtproc.Start();
-
-                var amtlog = amtproc.StandardOutput.ReadToEnd();
-
-                amtproc.WaitForExit();
-
-                //if (amtlog.EndsWith("件追加しました") == true)
-                //{
-                //    break;
-                //} 
-                //else if (retrycount++ < retrynum)
-                //{
-                //    Console.ForegroundColor = ConsoleColor.Red;
-                //    Console.WriteLine("エラーが発生しました");
-                //    Console.ForegroundColor = ConsoleColor.Cyan;
-                //    Console.WriteLine("5秒後に再試行します… リトライ回数: {0}", retrycount);
-                //    Console.ResetColor();
-                //    logger.Error("タスク追加エラー発生");
-                //    logger.Warn("再試行待機 リトライ回数: {0}", retrycount);
-                //    Thread.Sleep(5000);
-                //}
-            //}
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("多分完了しました。");
-            Console.WriteLine("元TSを削除します");
             Console.ResetColor();
-            logger.Info("元ファイル削除");
-            File.Delete(suffix[0]);
+
+
 
             return;
 
